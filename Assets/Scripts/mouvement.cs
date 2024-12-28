@@ -5,7 +5,7 @@ using UnityEngine;
 public class Mouvement : MonoBehaviour
 {
     public Rigidbody2D rb;
-    public bool isGrounded = false;
+    public bool isGrounded;
 
     void Start()
     {
