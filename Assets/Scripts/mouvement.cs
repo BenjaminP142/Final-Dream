@@ -1,6 +1,9 @@
+using System;
 using UnityEngine;
+using Mirror;
+using UnityEditor;
 
-public class Mouvement : MonoBehaviour
+public class Mouvement : NetworkBehaviour
 {
     public Rigidbody2D rb;
     [SerializeField] private bool isGrounded = false;
@@ -12,7 +15,8 @@ public class Mouvement : MonoBehaviour
 
     void Update()
     {
-        PlayerMovement();
+        if (isLocalPlayer)
+            PlayerMovement();
     }
 
     private void PlayerMovement()
@@ -51,4 +55,5 @@ public class Mouvement : MonoBehaviour
             isGrounded = false;
         }
     }
+    
 }    
