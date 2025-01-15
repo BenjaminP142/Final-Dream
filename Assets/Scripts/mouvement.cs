@@ -3,6 +3,8 @@ using UnityEngine;
 public class Mouvement : MonoBehaviour
 {
     public Rigidbody2D rb;
+    public Animator animator;
+    public float speed = 40f;
     [SerializeField] private bool isGrounded = false;
 
     void Start()
@@ -17,11 +19,11 @@ public class Mouvement : MonoBehaviour
 
     private void PlayerMovement()
     {
+        animator.SetFloat("Speed", Mathf.Abs(Input.GetAxis("Horizontal") * speed));
         if (Input.GetButton("Horizontal"))
         {
             transform.Translate(7f * Input.GetAxis("Horizontal") * Time.deltaTime, 0, 0);
         }
-        
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.AddForce(Vector2.up * 10f, ForceMode2D.Impulse);
@@ -51,4 +53,6 @@ public class Mouvement : MonoBehaviour
             isGrounded = false;
         }
     }
-}    
+} 
+
+
