@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerFollow : MonoBehaviour
 {
     public Transform target;
+    
     // Update is called once per frame
     void Update()
     {
