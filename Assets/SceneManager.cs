@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,13 +15,23 @@ public class SceneManager : MonoBehaviour
 
     void ChangeSceneHost()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Plateformes");
+        DontDestroyOnLoad(NetworkManager.singleton.gameObject);
+        
+        // First start the network
         NetworkManager.singleton.StartHost();
+
+        // Then load scene through NetworkManager
+        NetworkManager.singleton.ServerChangeScene("Plateformes");
     }
 
     void ChangeSceneClient()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Plateformes");
+        DontDestroyOnLoad(NetworkManager.singleton.gameObject);
+        
+        // start the client
         NetworkManager.singleton.StartClient();
+
+        // Then load scene through NetworkManager
+        NetworkManager.singleton.ServerChangeScene("Plateformes");
     }
 }
