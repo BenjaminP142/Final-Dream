@@ -30,7 +30,7 @@ public class AiChase : MonoBehaviour
     }
     
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (player != null)
         {

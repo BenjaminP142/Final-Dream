@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  speed: 5
+  speed: 3
 --- !u!212 &372671149
 SpriteRenderer:
   m_ObjectHideFlags: 0
