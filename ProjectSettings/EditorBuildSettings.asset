@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/untitled.unity
     guid: c9b4ff148bb23ff4da398a96e488d059
   - enabled: 1
-    path: Assets/Scenes/Plateformes.unity
+    path: Assets/Scenes/game solo.unity
     guid: 920c29c4e9be01044a60318fb51fb677
   - enabled: 1
     path: Assets/Scenes/Main Menu.unity

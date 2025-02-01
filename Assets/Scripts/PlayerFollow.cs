@@ -1,12 +1,35 @@
 using UnityEngine;
+using Mirror;
 
-public class PlayerFollow : MonoBehaviour
+public class CameraFollow : MonoBehaviour
 {
-    public Transform target;
+    [Header("Camera Settings")]
+    [SerializeField] private Vector3 offset = new Vector3(0, 5, -10);
+    [SerializeField] private float smoothSpeed = 5f;
     
-    // Update is called once per frame
+    private Transform target;
+    
     void Update()
     {
-        transform.position = new Vector3(target.position.x, transform.position.y, transform.position.z);
+        // If we don't have a target, try to find the local player
+        if (target == null && NetworkClient.localPlayer != null)
+        {
+            target = NetworkClient.localPlayer.gameObject.transform;
+        }
+    }
+    
+    void LateUpdate()
+    {
+        if (target == null) return;
+        
+        // Calculate desired position
+        Vector3 desiredPosition = target.position + offset;
+        
+        // Smoothly move camera
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
+        transform.position = smoothedPosition;
+        
+        // Make camera look at player
+        transform.LookAt(target);
     }
 }
