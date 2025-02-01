@@ -7,10 +7,12 @@ public class SceneManager : MonoBehaviour
 {
     public Button buttonHost;
     public Button buttonClient;
+    public Button buttonSolo;
     void Start()
     {
         buttonHost.onClick.AddListener(ChangeSceneHost);
         buttonClient.onClick.AddListener(ChangeSceneClient);
+        buttonSolo.onClick.AddListener(ChangeSceneSolo);
     }
 
     void ChangeSceneHost()
@@ -21,7 +23,7 @@ public class SceneManager : MonoBehaviour
         NetworkManager.singleton.StartHost();
 
         // Then load scene through NetworkManager
-        NetworkManager.singleton.ServerChangeScene("Plateformes");
+        NetworkManager.singleton.ServerChangeScene("game duo");
     }
 
     void ChangeSceneClient()
@@ -32,6 +34,15 @@ public class SceneManager : MonoBehaviour
         NetworkManager.singleton.StartClient();
 
         // Then load scene through NetworkManager
-        NetworkManager.singleton.ServerChangeScene("Plateformes");
+        NetworkManager.singleton.ServerChangeScene("game duo");
+    }
+
+    void ChangeSceneSolo()
+    {
+        //start a single host, we don't want any other player
+        NetworkManager.singleton.StartHost();
+        
+        //load the scene for a single player game
+        NetworkManager.singleton.ServerChangeScene("game solo");
     }
 }
