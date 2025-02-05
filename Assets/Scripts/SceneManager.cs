@@ -17,24 +17,30 @@ public class SceneManager : MonoBehaviour
 
     void ChangeSceneHost()
     {
-        DontDestroyOnLoad(NetworkManager.singleton.gameObject);
-        
-        // First start the network
+        if (NetworkManager.singleton.isNetworkActive)
+        {
+            NetworkManager.singleton.StopHost();
+            NetworkManager.singleton.StopClient();
+            NetworkManager.singleton.StopServer();
+        }
+    
         NetworkManager.singleton.StartHost();
-
-        // Then load scene through NetworkManager
         NetworkManager.singleton.ServerChangeScene("game duo");
     }
 
     void ChangeSceneClient()
     {
-        DontDestroyOnLoad(NetworkManager.singleton.gameObject);
-        
-        // start the client
-        NetworkManager.singleton.StartClient();
-
-        // Then load scene through NetworkManager
-        NetworkManager.singleton.ServerChangeScene("game duo");
+        if (!NetworkManager.singleton.isNetworkActive)
+        {
+            // start the client
+            NetworkManager.singleton.StartClient();
+        }
+        else
+        {
+            NetworkManager.singleton.StopClient();
+            
+            NetworkManager.singleton.StartClient();
+        }
     }
 
     void ChangeSceneSolo()

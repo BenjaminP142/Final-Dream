@@ -817,7 +817,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: single player
+  m_text: Single Player
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -908,7 +908,6 @@ GameObject:
   - component: {fileID: 1341260765}
   - component: {fileID: 1341260764}
   - component: {fileID: 1341260763}
-  - component: {fileID: 1341260762}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -916,20 +915,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1341260762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1341260761}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15d5697e4fa93d743826bfce89d1748f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonHost: {fileID: 460182380}
-  buttonClient: {fileID: 1459336676}
 --- !u!114 &1341260763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1205,7 +1190,7 @@ MonoBehaviour:
   offlineSceneLoadDelay: 0
   transport: {fileID: 1755118001}
   networkAddress: localhost
-  maxConnections: 2
+  maxConnections: 100
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
