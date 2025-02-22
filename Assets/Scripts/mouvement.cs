@@ -1,9 +1,9 @@
 using UnityEngine;
-
-public class Mouvement : MonoBehaviour
+using Mirror;
+public class Mouvement : NetworkBehaviour
 {
     public Rigidbody2D rb;
-    public Animator animator;
+    public NetworkAnimator animator;
     public float Runspeed = 40f;
     private float horizontalMove = 0f;
     private bool isGrounded = false;
@@ -17,6 +17,8 @@ public class Mouvement : MonoBehaviour
 
     void Update()
     {
+        if (!isLocalPlayer) return;
+        
         PlayerMovement();
         UpdateJumpAnimation();
     }
@@ -24,7 +26,7 @@ public class Mouvement : MonoBehaviour
     private void PlayerMovement()
     {
         horizontalMove = Input.GetAxis("Horizontal") * Runspeed;
-        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+        animator.animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
         if (Input.GetButton("Horizontal"))
         {
@@ -35,27 +37,29 @@ public class Mouvement : MonoBehaviour
         {
             rb.AddForce(Vector2.up * 10f, ForceMode2D.Impulse);
             isGrounded = false;
-            animator.SetBool("IsJumping", true);
+            animator.animator.SetBool("IsJumping", true);
         }
         
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             crouch = true;
-            animator.SetBool("IsCrouching", true);
+            animator.animator.SetBool("IsCrouching", true);
         }
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             crouch = false;
-            animator.SetBool("IsCrouching", false);
+            animator.animator.SetBool("IsCrouching", false);
         }
         
         if (horizontalMove > 0 && !facingRight)
         {
-            Flip();
+            if (isServer) RpcFlip();
+            else CmdRequestFlip();
         }
         else if (horizontalMove < 0 && facingRight)
         {
-            Flip();
+            if (isServer) RpcFlip();
+            else CmdRequestFlip();
         }
     }
 
@@ -65,40 +69,41 @@ public class Mouvement : MonoBehaviour
         {
             if (rb.linearVelocity.y > 2f) // Montée
             {
-                animator.SetBool("IsJumping", true);
-                animator.SetBool("JumpMid", false);
-                animator.SetBool("JumpFall", false);
+                animator.animator.SetBool("IsJumping", true);
+                animator.animator.SetBool("JumpMid", false);
+                animator.animator.SetBool("JumpFall", false);
             }
             else if (rb.linearVelocity.y <= 2f && rb.linearVelocity.y >= -2f) // Sommet du saut
             {
-                animator.SetBool("IsJumping", false);
-                animator.SetBool("JumpMid", true);
-                animator.SetBool("JumpFall", false);
+                animator.animator.SetBool("IsJumping", false);
+                animator.animator.SetBool("JumpMid", true);
+                animator.animator.SetBool("JumpFall", false);
             }
             else if (rb.linearVelocity.y < -2f) // Descente
             {
-                animator.SetBool("IsJumping", false);
-                animator.SetBool("JumpMid", false);
-                animator.SetBool("JumpFall", true);
+                animator.animator.SetBool("IsJumping", false);
+                animator.animator.SetBool("JumpMid", false);
+                animator.animator.SetBool("JumpFall", true);
             }
         }
     }
 
-    private void Flip()
+    [ClientRpc]
+    private void RpcFlip()
     {
-        facingRight = !facingRight;
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+        facingRight = !facingRight;
     }
 
     private void OnLanding()
     {
-        animator.SetBool("IsJumping", false);
-        animator.SetBool("JumpMid", false);
+        animator.animator.SetBool("IsJumping", false);
+        animator.animator.SetBool("JumpMid", false);
         if (isGrounded)
         {
-            animator.SetBool("JumpFall", false);
+            animator.animator.SetBool("JumpFall", false);
         }
     }
 
@@ -117,5 +122,11 @@ public class Mouvement : MonoBehaviour
         {
             isGrounded = false;
         }
+    }
+    
+    [Command]
+    private void CmdRequestFlip()
+    {
+        RpcFlip();
     }
 }
