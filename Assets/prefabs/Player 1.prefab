@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: -4545631850200032839}
   - component: {fileID: -2633516368394484033}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Player 1
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneId: 0
-  _assetId: 2503155691
+  _assetId: 2681411727
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
