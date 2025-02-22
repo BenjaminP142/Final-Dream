@@ -1,6 +1,15 @@
 fileFormatVersion: 2
-guid: 8c9cfa26abfee488c85f1582747f6a02
+<<<<<<< HEAD
+guid: 77c1a756d467f874d88a4ddbb7c0ff59
+PrefabImporter:
+=======
+<<<<<<<< HEAD:Assets/Scenes/main menu.unity.meta
+guid: d25800f16cdf4bc47b65b870252f9974
+========
+guid: 9084412cdeae2d240ab3df9a6a25d562
+>>>>>>>> 99b1c2871319ca6deb315f35eb7a40d39d3de867:Assets/Scenes/game duo.unity.meta
 DefaultImporter:
+>>>>>>> 99b1c2871319ca6deb315f35eb7a40d39d3de867
   externalObjects: {}
   userData: 
   assetBundleName: 
