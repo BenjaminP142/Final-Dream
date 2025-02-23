@@ -13,12 +13,12 @@ public class CustomNetworkManager : NetworkManager
         
         // Spawn the player at the calculated position with default rotation
         Transform startPos = GetStartPosition();
-        GameObject player = startPos != null
-            ? Instantiate(playerPrefab, startPos.position + spawnPos, startPos.rotation)
-            : Instantiate(playerPrefab, spawnPos, Quaternion.identity);
+        Vector3 position = startPos != null ? startPos.position + spawnPos : spawnPos;
+        
+        GameObject player = Instantiate(playerPrefab, position, Quaternion.identity);
         
         // Add the player to the network
-        base.OnServerAddPlayer(conn);
+        NetworkServer.Spawn(player, conn);
         
         playerCount++;
     }
