@@ -34,21 +34,33 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        InvokeRepeating("FindPlayer", 0.5f,0.5f);
         
-        // Initialize the pathfinding grid
-        pathfinder = new GridPathfinding(100, 100, 0.5f); // Adjust grid size and cell size based on your game
+        Vector2 centerPoint = player.position;
+        float gridSize = 30f; // Adjust based on your level size
+        float cellSize = 0.5f; // Smaller for more precise paths
         
-        // For testing, add some obstacles to the grid
+        // Create grid centered on the player
+        int gridWidth = Mathf.CeilToInt(gridSize / cellSize);
+        int gridHeight = Mathf.CeilToInt(gridSize / cellSize);
+        
+        pathfinder = new GridPathfinding(gridWidth, gridHeight, cellSize);
+        Debug.Log($"Grid initialized: {gridWidth}x{gridHeight} cells at {cellSize} size");
+        
         UpdatePathfindingGrid();
     }
-    
+
+    void FindPlayer()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
     void Update()
     {
         // Check if player is in detection range
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         playerInRange = distanceToPlayer <= detectionRange;
-        
+
         if (playerInRange)
         {
             // Update path periodically
@@ -58,7 +70,7 @@ public class EnemyAI : MonoBehaviour
                 UpdatePath();
                 pathUpdateTimer = pathUpdateRate;
             }
-            
+
             // Check if player is in attack range
             if (distanceToPlayer <= attackRange)
             {
@@ -70,7 +82,7 @@ public class EnemyAI : MonoBehaviour
             }
         }
     }
-    
+
     void UpdatePathfindingGrid()
     {
         // Clear the grid
@@ -101,52 +113,73 @@ public class EnemyAI : MonoBehaviour
     {
         // Update the pathfinding grid first
         UpdatePathfindingGrid();
-        
+    
         // Find path to player
-        pathPoints = pathfinder.FindPath(transform.position, player.position);
-        
-        if (pathPoints.Count > 0)
+        List<Vector2> newPath = pathfinder.FindPath(transform.position, player.position);
+    
+        if (newPath.Count > 0)
         {
+            pathPoints = newPath;
             currentPathIndex = 0;
-            currentPathTarget = pathPoints[0];
+        
+            // Debug path information
+            Debug.Log($"Found path with {pathPoints.Count} points from {transform.position} to {player.position}");
+        
+            // Visualize the full path
+            for (int i = 0; i < pathPoints.Count - 1; i++)
+            {
+                Debug.DrawLine(pathPoints[i], pathPoints[i + 1], Color.blue, pathUpdateRate);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("No path found to player!");
+        
+            // If no path is found, try direct movement
+            Vector2 directDir = ((Vector3)player.position - transform.position).normalized;
+            rb.linearVelocity = directDir * moveSpeed;
         }
     }
     
     void FollowPath()
     {
-        if (pathPoints.Count == 0) return;
-        
-        // Move towards the current path point
+        if (pathPoints.Count == 0 || currentPathIndex >= pathPoints.Count) 
+        {
+            // No valid path or index out of range - update the path
+            UpdatePath();
+            return;
+        }
+    
+        // Get the current target point
+        currentPathTarget = pathPoints[currentPathIndex];
+    
+        // Calculate direction to the current target
         Vector2 direction = ((Vector3)currentPathTarget - transform.position).normalized;
+    
+        // Move the enemy
         rb.linearVelocity = direction * moveSpeed;
-        
+    
+        // Visualize the path and current target in the scene view
+        Debug.DrawLine(transform.position, currentPathTarget, Color.green);
+    
         // Check if we've reached the current path point
         float distanceToTarget = Vector2.Distance(transform.position, currentPathTarget);
         if (distanceToTarget < 0.1f)
         {
-            // Move to next path point
+            // Advance to next point
             currentPathIndex++;
-            
-            // Check if we've reached the end of the path
+        
             if (currentPathIndex >= pathPoints.Count)
             {
-                // Path completed, get a new path
+                // We've reached the end of the path
                 UpdatePath();
             }
-            else
-            {
-                currentPathTarget = pathPoints[currentPathIndex];
-            }
         }
-        
-        // Flip the sprite to face the movement direction
-        if (direction.x > 0)
+    
+        // Flip the sprite based on movement direction
+        if (Mathf.Abs(direction.x) > 0.1f)  // Only flip if there's significant horizontal movement
         {
-            transform.localScale = new Vector3(1, 1, 1);
-        }
-        else if (direction.x < 0)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.localScale = new Vector3(direction.x > 0 ? 1 : -1, 1, 1);
         }
     }
     
@@ -394,32 +427,5 @@ public class GridPathfinding
             HCost = 0;
             Parent = null;
         }
-    }
-}
-
-public class PlayerHealth : MonoBehaviour
-{
-    [SerializeField] private int maxHealth = 100;
-    private int currentHealth;
-    
-    void Start()
-    {
-        currentHealth = maxHealth;
-    }
-    
-    public void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-    
-    void Die()
-    {
-        Debug.Log("Player died!");
-        // Implement player death logic
     }
 }
