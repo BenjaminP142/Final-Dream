@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : NetworkBehaviour
 {
     [Header("References")]
     private Transform player;
@@ -30,29 +31,37 @@ public class EnemyAI : MonoBehaviour
     
     // A simple grid-based pathfinding system for 2D
     private GridPathfinding pathfinder;
-    
+
+    IEnumerator WaitForPlayer()
+    {
+        while (player == null)
+        {
+            GameObject foundPlayer = GameObject.FindGameObjectWithTag("Player");
+            if (foundPlayer != null)
+            {
+                player = foundPlayer.transform;
+                Debug.Log("Player found!");
+                Vector2 centerPoint = player.position;
+                float gridSize = 30f; // Adjust based on your level size
+                float cellSize = 0.5f; // Smaller for more precise paths
+
+                // Create grid centered on the player
+                int gridWidth = Mathf.CeilToInt(gridSize / cellSize);
+                int gridHeight = Mathf.CeilToInt(gridSize / cellSize);
+
+                pathfinder = new GridPathfinding(gridWidth, gridHeight, cellSize);
+                Debug.Log($"Grid initialized: {gridWidth}x{gridHeight} cells at {cellSize} size");
+
+                UpdatePathfindingGrid();
+                yield break; // Stop the coroutine
+            }
+            yield return new WaitForSeconds(0.5f); // Retry after a short delay
+        }
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        InvokeRepeating("FindPlayer", 0.5f,0.5f);
-        
-        Vector2 centerPoint = player.position;
-        float gridSize = 30f; // Adjust based on your level size
-        float cellSize = 0.5f; // Smaller for more precise paths
-        
-        // Create grid centered on the player
-        int gridWidth = Mathf.CeilToInt(gridSize / cellSize);
-        int gridHeight = Mathf.CeilToInt(gridSize / cellSize);
-        
-        pathfinder = new GridPathfinding(gridWidth, gridHeight, cellSize);
-        Debug.Log($"Grid initialized: {gridWidth}x{gridHeight} cells at {cellSize} size");
-        
-        UpdatePathfindingGrid();
-    }
-
-    void FindPlayer()
-    {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        StartCoroutine(WaitForPlayer());
     }
 
     void Update()
@@ -85,6 +94,11 @@ public class EnemyAI : MonoBehaviour
 
     void UpdatePathfindingGrid()
     {
+        if (pathfinder == null)
+        {
+            Debug.LogError("Pathfinder is null! Cannot update grid.");
+            return;
+        }
         // Clear the grid
         pathfinder.ClearObstacles();
         
@@ -137,7 +151,8 @@ public class EnemyAI : MonoBehaviour
         
             // If no path is found, try direct movement
             Vector2 directDir = ((Vector3)player.position - transform.position).normalized;
-            rb.linearVelocity = directDir * moveSpeed;
+            rb.linearVelocity = new Vector2(directDir.x * moveSpeed, Mathf.Clamp(directDir.y * moveSpeed, -moveSpeed, moveSpeed));
+
         }
     }
     
@@ -145,7 +160,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (pathPoints.Count == 0 || currentPathIndex >= pathPoints.Count) 
         {
-            // No valid path or index out of range - update the path
+            Debug.Log("No valid path. Trying to update...");
             UpdatePath();
             return;
         }
@@ -154,10 +169,17 @@ public class EnemyAI : MonoBehaviour
         currentPathTarget = pathPoints[currentPathIndex];
     
         // Calculate direction to the current target
-        Vector2 direction = ((Vector3)currentPathTarget - transform.position).normalized;
-    
+        Vector2 direction = (currentPathTarget - (Vector2)transform.position).normalized;
+        
+        if (Mathf.Abs(direction.x) < 0.2f) 
+        {
+            direction.x = player.position.x > transform.position.x ? 1 : -1;
+        }
+        direction = direction.normalized;
         // Move the enemy
-        rb.linearVelocity = direction * moveSpeed;
+        rb.linearVelocity = new Vector2(direction.x * moveSpeed, Mathf.Clamp(direction.y * moveSpeed, -moveSpeed, moveSpeed));
+        
+        Debug.Log($"Moving enemy. Direction: {direction}, Velocity: {rb.linearVelocity}");
     
         // Visualize the path and current target in the scene view
         Debug.DrawLine(transform.position, currentPathTarget, Color.green);
@@ -171,7 +193,7 @@ public class EnemyAI : MonoBehaviour
         
             if (currentPathIndex >= pathPoints.Count)
             {
-                // We've reached the end of the path
+                Debug.Log("Reached end of path. Updating...");
                 UpdatePath();
             }
         }

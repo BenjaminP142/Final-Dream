@@ -23,6 +23,6 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Player died!");
-        // Implement player death logic
+        Destroy(gameObject, 0.5f); // Destroy after short delay
     }
 }
