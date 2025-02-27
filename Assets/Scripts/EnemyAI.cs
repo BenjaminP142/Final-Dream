@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class EnemyAI : NetworkBehaviour
+public class EnemyAI : MonoBehaviour
 {
     [Header("References")]
     private Transform player;
