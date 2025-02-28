@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "play allume\u0301_0": 4418687715324508573
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
