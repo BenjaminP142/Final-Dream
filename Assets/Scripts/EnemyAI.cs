@@ -42,8 +42,8 @@ public class EnemyAI : MonoBehaviour
                 player = foundPlayer.transform;
                 Debug.Log("Player found!");
                 Vector2 centerPoint = player.position;
-                float gridSize = 30f; // Adjust based on your level size
-                float cellSize = 0.5f; // Smaller for more precise paths
+                float gridSize = 15f; // Adjust based on your level size
+                float cellSize = 0.2f; // Smaller for more precise paths
 
                 // Create grid centered on the player
                 int gridWidth = Mathf.CeilToInt(gridSize / cellSize);
@@ -104,6 +104,7 @@ public class EnemyAI : MonoBehaviour
         
         // Find all colliders that should be obstacles
         Collider2D[] obstacles = Physics2D.OverlapCircleAll(transform.position, detectionRange * 1.5f);
+        Debug.Log($"Checking for obstacles... Found {obstacles.Length} colliders.");
         foreach (Collider2D obstacle in obstacles)
         {
             if (obstacle.gameObject.layer == LayerMask.NameToLayer("Obstacles"))
@@ -111,7 +112,7 @@ public class EnemyAI : MonoBehaviour
                 // Add the obstacle to the grid
                 Vector2 size = obstacle.bounds.size;
                 Vector2 min = obstacle.bounds.min;
-                
+                Debug.Log($"Adding obstacle at {obstacle.transform.position} with size {size}");
                 for (float x = min.x; x < min.x + size.x; x += 0.5f)
                 {
                     for (float y = min.y; y < min.y + size.y; y += 0.5f)
@@ -150,7 +151,7 @@ public class EnemyAI : MonoBehaviour
             Debug.LogWarning("No path found to player!");
         
             // If no path is found, try direct movement
-            Vector2 directDir = ((Vector3)player.position - transform.position).normalized;
+            Vector2 directDir = (player.position - transform.position).normalized;
             rb.linearVelocity = new Vector2(directDir.x * moveSpeed, Mathf.Clamp(directDir.y * moveSpeed, -moveSpeed, moveSpeed));
 
         }
@@ -170,16 +171,23 @@ public class EnemyAI : MonoBehaviour
     
         // Calculate direction to the current target
         Vector2 direction = (currentPathTarget - (Vector2)transform.position).normalized;
-        
+        Debug.Log($"Current Position: {transform.position}, Target: {currentPathTarget}, Direction: {direction}");
+        /*
+        if (direction.x < 0 && player.position.x > transform.position.x)
+        {
+            Debug.Log("Fixing movement: Forcing right direction.");
+            direction.x = 1;
+        }
         if (Mathf.Abs(direction.x) < 0.2f) 
         {
             direction.x = player.position.x > transform.position.x ? 1 : -1;
         }
+        */
         direction = direction.normalized;
         // Move the enemy
         rb.linearVelocity = new Vector2(direction.x * moveSpeed, Mathf.Clamp(direction.y * moveSpeed, -moveSpeed, moveSpeed));
         
-        Debug.Log($"Moving enemy. Direction: {direction}, Velocity: {rb.linearVelocity}");
+        //Debug.Log($"Moving enemy. Direction: {direction}, Velocity: {rb.linearVelocity}");
     
         // Visualize the path and current target in the scene view
         Debug.DrawLine(transform.position, currentPathTarget, Color.green);
@@ -188,6 +196,12 @@ public class EnemyAI : MonoBehaviour
         float distanceToTarget = Vector2.Distance(transform.position, currentPathTarget);
         if (distanceToTarget < 0.1f)
         {
+            if (Physics2D.OverlapCircle(currentPathTarget, 0.2f, LayerMask.GetMask("Obstacles")))
+            {
+                Debug.LogWarning($"Waypoint {currentPathTarget} is inside an obstacle. Recalculating path...");
+                UpdatePath();
+                return;
+            }
             // Advance to next point
             currentPathIndex++;
         
@@ -274,7 +288,7 @@ public class GridPathfinding
         this.cellSize = cellSize;
         grid = new bool[width, height];
     }
-    
+
     public void AddObstacle(Vector2 worldPosition)
     {
         // Convert world position to grid position
@@ -293,7 +307,32 @@ public class GridPathfinding
         grid = new bool[width, height];
     }
     
+    bool IsPointValid(Vector2 point)
+    {
+        Collider2D hit = Physics2D.OverlapCircle(point, 0.2f, LayerMask.GetMask("Obstacles"));
+        return hit == null; // True if there's no obstacle
+    }
     public List<Vector2> FindPath(Vector2 startPos, Vector2 endPos)
+    {
+        List<Vector2> rawPath = AStarPathfinding(startPos, endPos);
+        List<Vector2> filteredPath = new List<Vector2>();
+
+        foreach (Vector2 point in rawPath)
+        {
+            if (IsPointValid(point))
+            {
+                filteredPath.Add(point);
+            }
+            else
+            {
+                Debug.LogWarning($"Waypoint {point} is inside an obstacle. Skipping!");
+            }
+        }
+
+        return filteredPath;
+    }
+
+    public List<Vector2> AStarPathfinding(Vector2 startPos, Vector2 endPos)
     {
         // Convert world positions to grid positions
         int startX = Mathf.FloorToInt(startPos.x / cellSize) + width / 2;
