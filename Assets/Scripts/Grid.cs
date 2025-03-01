@@ -45,7 +45,7 @@ public class Grid : MonoBehaviour
         int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
         return grid[x, y];
     }
-
+    /*
     void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, gridWorldSize.y, 1));
@@ -59,4 +59,5 @@ public class Grid : MonoBehaviour
             }
         }
     }
+    */
 }
