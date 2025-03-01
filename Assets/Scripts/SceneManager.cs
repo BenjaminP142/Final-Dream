@@ -8,11 +8,13 @@ public class SceneManager : MonoBehaviour
     public Button buttonHost;
     public Button buttonClient;
     public Button buttonSolo;
+    public Button buttonExit;
     void Start()
     {
         buttonHost.onClick.AddListener(ChangeSceneHost);
         buttonClient.onClick.AddListener(ChangeSceneClient);
         buttonSolo.onClick.AddListener(ChangeSceneSolo);
+        buttonExit.onClick.AddListener(ExitGame);
     }
 
     void ChangeSceneHost()
@@ -50,5 +52,16 @@ public class SceneManager : MonoBehaviour
         
         //load the scene for a single player game
         NetworkManager.singleton.ServerChangeScene("game solo");
+    }
+
+    void ExitGame()
+    {
+        #if UNITY_EDITOR // If running in the editor
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else // If running in a build
+            Application.Quit();
+        #endif
+        
+        Debug.Log("Game is quitting...");
     }
 }
