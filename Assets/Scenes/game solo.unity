@@ -317,6 +317,7 @@ MonoBehaviour:
   speed: 5
   pathfinding: {fileID: 1893166487}
   grid: {fileID: 1893166485}
+  pathUpdateInterval: 0.5
 --- !u!1 &1428179814
 GameObject:
   m_ObjectHideFlags: 0
@@ -770,8 +771,8 @@ MonoBehaviour:
   unwalkableMask:
     serializedVersion: 2
     m_Bits: 64
-  gridWorldSize: {x: 34.4, y: 19.84}
-  nodeRadius: 0.2
+  gridWorldSize: {x: 43.4, y: 18.2}
+  nodeRadius: 0.3
   gridSizeX: 1
   gridSizeY: 1
 --- !u!4 &1893166486
@@ -783,7 +784,7 @@ Transform:
   m_GameObject: {fileID: 1893166484}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.83, y: -0.3875388, z: -0.10329898}
+  m_LocalPosition: {x: 0.83, y: 2.48, z: -0.10329898}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

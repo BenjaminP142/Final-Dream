@@ -42,10 +42,6 @@ public class Enemy : MonoBehaviour
 
         StartCoroutine(TrackPlayer());
     }
-    void Update()
-    {
-        
-    }
 
     IEnumerator TrackPlayer()
     {
@@ -59,13 +55,13 @@ public class Enemy : MonoBehaviour
                 {
                     Debug.Log("Path found with " + path.Count + " nodes.");
                     Vector3[] waypoints = SimplifyPath(path);
-
+                    /*
                     // Visualize the path (for debugging)
                     for (int i = 0; i < waypoints.Length - 1; i++)
                     {
                         Debug.DrawLine(waypoints[i], waypoints[i + 1], Color.green, 1f);
                     }
-
+                    */
                     yield return StartCoroutine(FollowPath(waypoints));
                 }
                 else
@@ -73,7 +69,6 @@ public class Enemy : MonoBehaviour
                     Debug.Log("No path found.");
                 }
             }
-            yield return new WaitForSeconds(pathUpdateInterval);
         }
     }
 
