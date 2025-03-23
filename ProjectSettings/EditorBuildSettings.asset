@@ -8,18 +8,18 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 0
-    path: Assets/Scenes/Main Menu.unity
-    guid: c9b4ff148bb23ff4da398a96e488d059
   - enabled: 1
     path: Assets/Scenes/Main Menu.unity
-    guid: d25800f16cdf4bc47b65b870252f9974
+    guid: c9b4ff148bb23ff4da398a96e488d059
   - enabled: 1
     path: Assets/Scenes/game solo.unity
     guid: 920c29c4e9be01044a60318fb51fb677
   - enabled: 1
     path: Assets/Scenes/game duo.unity
-    guid: 9084412cdeae2d240ab3df9a6a25d562
+    guid: 77c1a756d467f874d88a4ddbb7c0ff59
+  - enabled: 1
+    path: Assets/Scenes/LANConnection.unity
+    guid: dd6f70038476889438b52464d2fcb517
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
