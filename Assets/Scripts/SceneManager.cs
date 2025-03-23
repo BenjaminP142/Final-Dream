@@ -30,17 +30,7 @@ public class SceneManager : MonoBehaviour
 
     void ChangeSceneClient()
     {
-        if (!NetworkManager.singleton.isNetworkActive)
-        {
-            // start the client
-            NetworkManager.singleton.StartClient();
-        }
-        else
-        {
-            NetworkManager.singleton.StopClient();
-            
-            NetworkManager.singleton.StartClient();
-        }
+        UnityEngine.SceneManagement.SceneManager.LoadScene("LANConnection");
     }
 
     void ChangeSceneSolo()
