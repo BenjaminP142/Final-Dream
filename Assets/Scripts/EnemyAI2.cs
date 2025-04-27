@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
-{
+public class Enemy : NetworkBehaviour
+{  
     public Transform player;
+    private List<Transform> players = new List<Transform>();
     public float speed = 5f;
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Grid grid;
@@ -13,24 +15,61 @@ public class Enemy : MonoBehaviour
     void OnEnable()
     {
         // Subscribe to the player spawn event
-        PlayerController.OnPlayerSpawned += OnPlayerSpawned;
+        PlayerController.OnPlayerSpawned += OnPlayerSpawnedOrDespawned;
     }
 
     void OnDisable()
     {
         // Unsubscribe to avoid memory leaks
-        PlayerController.OnPlayerSpawned -= OnPlayerSpawned;
+        PlayerController.OnPlayerSpawned -= OnPlayerSpawnedOrDespawned;
     }
 
-    private void OnPlayerSpawned(Transform playerTransform)
+    private void OnPlayerSpawnedOrDespawned(Transform playerTransform)
     {
-        player = playerTransform;
-        Debug.Log("Player spawned! Starting to track...");
+        RefreshPlayers();
+        if (player == null)
+        {
+            SelectNextPlayer();
+        }
     }
 
+    private void RefreshPlayers()
+    {
+        players.Clear();
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            players.Add(go.transform);
+        }
+    }
+    
+    private void SelectNextPlayer()
+    {
+        // Nettoie les joueurs qui ont été détruits
+        players.RemoveAll(p => p == null);
+
+        if (players.Count > 0)
+        {
+            player = players[0]; // On prend le premier dispo
+        }
+        else
+        {
+            player = null; // Aucun joueur trouvé
+        }
+    }
+    
     void Start()
     {
         StartCoroutine(FindPlayer());
+    }
+    
+    private void Update()
+    {
+        // Si on n'a plus de player valide
+        if (player == null)
+        {
+            RefreshPlayers();
+            SelectNextPlayer();
+        }
     }
 
     IEnumerator FindPlayer()
@@ -72,7 +111,7 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                yield return null;
+                yield return new WaitForSeconds(0.5f);
             }
         }
     }
