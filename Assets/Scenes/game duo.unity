@@ -421,10 +421,11 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   player: {fileID: 0}
-  speed: 5
+  speed: 2.7
   pathfinding: {fileID: 657892810}
   grid: {fileID: 657892811}
   pathUpdateInterval: 0.5
+  trackDistance: 20
 --- !u!114 &283435979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,7 +676,7 @@ MonoBehaviour:
   unwalkableMask:
     serializedVersion: 2
     m_Bits: 64
-  gridWorldSize: {x: 25, y: 12.8}
+  gridWorldSize: {x: 47, y: 14.9}
   nodeRadius: 0.65
   gridSizeX: 1
   gridSizeY: 1

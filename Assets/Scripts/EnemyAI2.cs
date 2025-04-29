@@ -11,6 +11,7 @@ public class Enemy : NetworkBehaviour
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Grid grid;
     public float pathUpdateInterval = 0.01f;
+    public float trackDistance = 5f;
 
     void OnEnable()
     {
@@ -49,11 +50,23 @@ public class Enemy : NetworkBehaviour
 
         if (players.Count > 0)
         {
-            player = players[0]; // On prend le premier dispo
+            SelectClosestPlayer(); // On prend le plus proche de l'ennemi
         }
         else
         {
             player = null; // Aucun joueur trouvé
+        }
+    }
+
+    private void SelectClosestPlayer()
+    {
+        foreach (Transform p in players)
+        {
+            if (Vector2.Distance(transform.position, p.position) <
+                Vector2.Distance(transform.position, player.position))
+            {
+                player = p;
+            }
         }
     }
     
@@ -86,7 +99,8 @@ public class Enemy : NetworkBehaviour
     { 
         while (true)
         {
-            if (player != null)
+            SelectClosestPlayer();
+            if (player != null && Vector2.Distance(transform.position, player.position) <= trackDistance)
             {
                 List<Node> path = pathfinding.FindPath(transform.position, player.position);
 
