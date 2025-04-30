@@ -11,21 +11,21 @@ public class Enemy : NetworkBehaviour
     [SerializeField] private Pathfinding pathfinding;
     [SerializeField] private Grid grid;
     public float pathUpdateInterval = 0.01f;
-    public float trackDistance = 5f;
+    public float trackDistance = 0.1f;
 
     void OnEnable()
     {
         // Subscribe to the player spawn event
-        PlayerController.OnPlayerSpawned += OnPlayerSpawnedOrDespawned;
+        PlayerController.OnPlayerSpawned += OnPlayerSpawned;
     }
 
     void OnDisable()
     {
         // Unsubscribe to avoid memory leaks
-        PlayerController.OnPlayerSpawned -= OnPlayerSpawnedOrDespawned;
+        PlayerController.OnPlayerSpawned -= OnPlayerSpawned;
     }
 
-    private void OnPlayerSpawnedOrDespawned(Transform playerTransform)
+    private void OnPlayerSpawned(Transform playerTransform)
     {
         RefreshPlayers();
         if (player == null)
@@ -50,6 +50,7 @@ public class Enemy : NetworkBehaviour
 
         if (players.Count > 0)
         {
+            player = players[0];
             SelectClosestPlayer(); // On prend le plus proche de l'ennemi
         }
         else
