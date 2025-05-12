@@ -27,13 +27,14 @@ public class Enemy : NetworkBehaviour
 
     private void OnPlayerSpawned(Transform playerTransform)
     {
-        RefreshPlayers();
+        players.Add(playerTransform);
         if (player == null)
         {
             SelectNextPlayer();
         }
     }
-
+    
+    /*
     private void RefreshPlayers()
     {
         players.Clear();
@@ -42,7 +43,7 @@ public class Enemy : NetworkBehaviour
             players.Add(go.transform);
         }
     }
-    
+    */
     private void SelectNextPlayer()
     {
         // Nettoie les joueurs qui ont été détruits
@@ -73,18 +74,12 @@ public class Enemy : NetworkBehaviour
     
     void Start()
     {
+        if (!isServer)
+            return;
         StartCoroutine(FindPlayer());
     }
     
-    private void Update()
-    {
-        // Si on n'a plus de player valide
-        if (player == null)
-        {
-            RefreshPlayers();
-            SelectNextPlayer();
-        }
-    }
+    private void Update() { }
 
     IEnumerator FindPlayer()
     {
@@ -126,7 +121,7 @@ public class Enemy : NetworkBehaviour
             }
             else
             {
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(1f);
             }
         }
     }

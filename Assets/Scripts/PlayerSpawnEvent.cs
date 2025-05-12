@@ -6,9 +6,9 @@ public class PlayerController : NetworkBehaviour
 {
     public static event Action<Transform> OnPlayerSpawned;
 
-    public override void OnStartAuthority()
+    public override void OnStartServer()
     {
-        base.OnStartAuthority();
+        base.OnStartServer();
 
         // Trigger the event when the player spawns
         OnPlayerSpawned?.Invoke(transform);
