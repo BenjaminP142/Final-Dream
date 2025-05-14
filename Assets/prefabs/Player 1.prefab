@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: -4545631850200032839}
   - component: {fileID: -2633516368394484033}
   - component: {fileID: -1140449779622073528}
+  - component: {fileID: -334865864518298106}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
@@ -325,3 +326,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportDestination: {x: 1000, y: 0, z: 0}
+--- !u!114 &-334865864518298106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6140082697325147097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abf42ca347bf0e0499f0571530d11110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
