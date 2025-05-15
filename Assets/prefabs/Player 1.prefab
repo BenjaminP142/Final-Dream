@@ -18,7 +18,6 @@ GameObject:
   - component: {fileID: -2909699301262121267}
   - component: {fileID: -4545631850200032839}
   - component: {fileID: -2633516368394484033}
-  - component: {fileID: -1140449779622073528}
   - component: {fileID: -334865864518298106}
   m_Layer: 0
   m_Name: Player 1
@@ -313,19 +312,6 @@ MonoBehaviour:
   syncInterval: 0
   clientAuthority: 0
   animator: {fileID: 944270755599944306}
---- !u!114 &-1140449779622073528
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6140082697325147097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f323d427c8eee5439541b01172f2685, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportDestination: {x: 1000, y: 0, z: 0}
 --- !u!114 &-334865864518298106
 MonoBehaviour:
   m_ObjectHideFlags: 0
