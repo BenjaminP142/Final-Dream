@@ -6,6 +6,7 @@ TagManager:
   tags:
   - floor
   - ggbg
+  - Water
   layers:
   - Default
   - TransparentFX
