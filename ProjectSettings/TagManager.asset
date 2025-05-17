@@ -7,6 +7,7 @@ TagManager:
   - floor
   - ggbg
   - Water
+  - HealthBar
   layers:
   - Default
   - TransparentFX

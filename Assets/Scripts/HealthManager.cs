@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,15 @@ public class Healthmanager : MonoBehaviour
 
     void Start()
     {
+        GameObject bar = GameObject.FindGameObjectWithTag("HealthBar");
+        if (bar != null)
+        {
+            Transform barTrans = bar.transform.Find("Health");
+            if (barTrans != null)
+            {
+                healthBar = barTrans.GetComponent<Image>();
+            }
+        }
         healthBar.fillAmount = healthAmount / 100f;
     }
 
@@ -22,7 +32,7 @@ public class Healthmanager : MonoBehaviour
         {
             Die();
         }
-
+/*
         if (Input.GetKeyDown(KeyCode.Return))
         {
             TakeDamage(20);
@@ -32,7 +42,7 @@ public class Healthmanager : MonoBehaviour
         {
             Heal(5);
         }
-
+*/
         if (isInWater && Time.time >= nextWaterDamageTime)
         {
             TakeDamage(5);
