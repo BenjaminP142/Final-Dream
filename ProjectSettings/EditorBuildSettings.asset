@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/game duo.unity
     guid: 77c1a756d467f874d88a4ddbb7c0ff59
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: e2645b1d4f5cade4ea8dfda58b2a4479
+  - enabled: 1
+    path: Assets/Scenes/LANConnection.unity
+    guid: dd6f70038476889438b52464d2fcb517
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

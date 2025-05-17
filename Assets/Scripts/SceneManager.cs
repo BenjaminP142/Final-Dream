@@ -3,18 +3,23 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Mirror;
+using UnityEditor;
+
 public class SceneManager : MonoBehaviour
 {
+    public GameObject[] environments;
     public Button buttonHost;
     public Button buttonClient;
     public Button buttonSolo;
     public Button buttonExit;
+    public Button buttonSettings;
     void Start()
     {
         buttonHost.onClick.AddListener(ChangeSceneHost);
         buttonClient.onClick.AddListener(ChangeSceneClient);
         buttonSolo.onClick.AddListener(ChangeSceneSolo);
         buttonExit.onClick.AddListener(ExitGame);
+        buttonSettings.onClick.AddListener(ChangeSceneSettings);
     }
 
     void ChangeSceneHost()
@@ -32,7 +37,8 @@ public class SceneManager : MonoBehaviour
 
     void ChangeSceneClient()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("LANConnection");
+        environments[0].SetActive(false);
+        environments[2].SetActive(true);
     }
 
     void ChangeSceneSolo()
@@ -53,5 +59,11 @@ public class SceneManager : MonoBehaviour
         #endif
         
         Debug.Log("Game is quitting...");
+    }
+
+    void ChangeSceneSettings()
+    {
+        environments[0].SetActive(false);
+        environments[1].SetActive(true);
     }
 }
